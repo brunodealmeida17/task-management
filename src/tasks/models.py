@@ -1,11 +1,12 @@
 from django.contrib.auth.models import User
+from perfil_users.models import Profile
 import re
 from django.db import models
 from datetime import timedelta, date
 
 
 class Task(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='tasks')
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     created_at = models.DateField(auto_now_add=True)
