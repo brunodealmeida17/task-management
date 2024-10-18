@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +32,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'home',
     'tasks',
+    'crispy_forms',
+    'crispy_bootstrap5', 
     'perfil_users',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -56,7 +60,7 @@ ROOT_URLCONF = 'task_manager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -64,10 +68,39 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'TaskContextProcessors.contextProcessors.injecAppsContextProcessor',             
             ],
         },
     },
 ]
+
+APP_URLS = {
+    # "nomedogrupo": [
+    #     ("Titulo para o front", "url"),
+    # ],
+    "tasks": [
+        ("Tarefas", "/tasks"),
+    ],
+    "users": [
+        ("Listar usuarios", "/users"),
+    ],
+    "timeEntry": [
+        ("Controle de tempo", "/timeentry"),
+    ],
+     
+}
+
+
+
+#   CRISPY FORMS
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# AUTH CONFIG
+LOGIN_REDIRECT_URL='home/'
+LOGIN_URL='login'
+LOGOUT_REDIRECT_URL='login'
+
+
 
 WSGI_APPLICATION = 'task_manager.wsgi.application'
 
@@ -105,9 +138,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -123,3 +156,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'perfil_users.CustomUser'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # Certifique-se de ter esse backend padrão do Django
+)
