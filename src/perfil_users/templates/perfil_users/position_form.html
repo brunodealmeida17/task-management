@@ -7,10 +7,12 @@
     <h2>{{ view.action }} Perfil</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}    
+        {{ form.as_p }}
+    
         <button type="submit" class="btn btn-primary">Salvar</button>
     </form>
 </div>
 {% endblock %}
 {% block js %}
 {% endblock %}
+

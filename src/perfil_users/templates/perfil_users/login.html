@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% block style %}
+{% endblock %}
 {% block content %}
-
 <div class="card bg-light mb-3 ">
     <div class="col-md-4 mx-auto">
         <br>
@@ -13,31 +14,27 @@
             <br>
             <h3>Ação não permitida<h3>
             <hr>
-            <p class="lead">
-              
+            <p class="lead">              
                 <strong>
                     Houve algum problema em processar a ação desejada ou você não tem permição para isso.
-                </strong>
-               
+                </strong>               
             </p>
             <br>
             <img class="card-img" src="{% static '' %}" alt="Imagem de capa do card">
             <br>
             <br>
-
-            {% else %}
-            
+            {% else %}            
             <hr>
                 {% csrf_token %}
                 {{ form|crispy }}
             <br>            
             <input class="btn btn-primary" type="submit" value="Entrar">
-
             <br>
         </form>
         <br>
         {%endif%}
     </div>
 </div>
-
-{%endblock%}
+{% endblock %}
+{% block js %}
+{% endblock %}

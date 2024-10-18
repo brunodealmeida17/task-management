@@ -1,4 +1,7 @@
 crispy-bootstrap5==2024.10
 Django==5.1.2
 django-braces==1.16.0
-django-crispy-forms==2.3
+django-crispy-forms==2.3asgiref==3.8.1
+django-ckeditor==6.7.1
+pillow==10.4.0
+

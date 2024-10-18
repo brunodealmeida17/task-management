@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ckeditor',
+    
 ]
 
 MIDDLEWARE = [
@@ -90,17 +92,13 @@ APP_URLS = {
      
 }
 
-
-
 #   CRISPY FORMS
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # AUTH CONFIG
 LOGIN_REDIRECT_URL='home/'
 LOGIN_URL='login'
-LOGOUT_REDIRECT_URL='login'
-
-
+LOGOUT_REDIRECT_URL='/login/'
 
 WSGI_APPLICATION = 'task_manager.wsgi.application'
 
@@ -138,14 +136,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'pt-br'
+LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/Sao_Paulo'
-
+TIME_ZONE = 'UTC'
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -162,3 +157,26 @@ AUTH_USER_MODEL = 'perfil_users.CustomUser'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # Certifique-se de ter esse backend padrão do Django
 )
+
+
+# CKEditor Settings
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+CKEDITOR_IMAGE_BACKEND = "pillow"
+
+CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js' 
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'extraPlugins': 'image2,codesnippet',  # Habilita o plugin de imagens avançadas e blocos de código
+        'removePlugins': 'image',
+       
+        'codeSnippet_theme': 'monokai_sublime',  # Tema do bloco de código
+        'height': 'auto',
+        'width': 'auto',
+        'toolbarCanCollapse': True,
+        'resize_enabled': True,  # Permite o redimensionamento do editor
+        'image2_alignClasses': ['image-left', 'image-center', 'image-right'],  # Classes de alinhamento para imagem
+        'image2_captionedClass': 'image-captioned',  # Classe CSS para imagens com legenda
+        'image2_disableResizer': False,  # Permitir redimensionamento com mouse
+    }
+}
