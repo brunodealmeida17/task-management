@@ -1,0 +1,57 @@
+{% load static %}
+
+{% block style %}
+  <style>
+    .logo-text {
+        font-family: "Lavishly Yours", cursive;
+        font-weight: 900;
+        font-style: normal;
+        font-size: 30px;
+        color: #fff;
+    }
+  </style>
+{% endblock style %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0052CC;">
+  <div class="container-fluid">   
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <span class="logo-text">TaskManager</span>
+    </a>
+    {% if user.is_authenticated %} 
+    <div class="mx-auto">
+      <div class="btn-group">
+        <a class="dropdown-toggle text-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Aplicaivos
+        </a>
+        <div class="dropdown-menu">
+          {% for app, pages in app_urls.items %}
+            {% for page, url in pages %}                
+              <a href="{{ url }}" class="dropdown-item">
+                {{ page }}
+              </a>                
+            {% endfor %}
+          {% endfor %}     
+        </div>
+      </div>
+    </div>
+    {% endif %} 
+
+    {% if user.is_authenticated %}
+      <div class="d-flex align-items-center ml-auto">
+        <h6 class="text-light mr-3">Bem vindo {{ user.username }}</h6>
+        <a href="#" onclick="document.getElementById('logout-form').submit();" class="mr-2">
+          <i class="fa-solid fa-right-from-bracket fa-xl text-light"></i>
+        </a>
+        <form id="logout-form" method="POST" action="{% url 'logout' %}" style="display: none;">
+          {% csrf_token %}
+        </form>
+      </div>
+    {% else %}
+      <div class="ml-auto">
+        <a href="{% url 'login' %}" class="text-light">Login</a>
+      </div>
+    {% endif %}    
+  </div>
+</nav>
+{% endblock content %}

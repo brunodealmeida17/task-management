@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <style>
+        body {
+            background-color: #F4F5F7;
+        }
+
+        .paper {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 20px;
+        }
+
+        .card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #0052CC;
+            color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            text-align: center;
+            height: 120px;
+            width: 250px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .card:hover {
+            background-color: #003884;
+        }
+
+        .card-title {
+            font-size: 20px;
+            margin: auto;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .card a {
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .navbar {
+            background-color: #172B4D;
+            padding: 10px;
+        }
+
+        .navbar-brand {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .navbar-brand:hover {
+            color: #fff;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="paper">
+            <h3 class="mb-4">Minhas Aplicações</h3>
+            <div class="card-grid">
+                {% for app, pages in app_urls.items %}
+                    {% for page, url in pages %}
+                        <div class="card">
+                            <a href="{{ url }}">
+                                <h3 class="card-title">{{ page }}</h3>
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+{% endblock %}

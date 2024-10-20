@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block style %}
+
+    
+{% endblock %}
+{% block content %}
+<div class="container mt-5 col-lg-12 center:"auto"">
+    <h2>Tarefas</h2>
+    <a href="{% url 'task_create' %}" class="btn btn-primary mb-3">Criar Nova Tarefa</a>
+    <a href="" class="btn btn-primary mb-3" data-toggle="modal" data-target="#exampleModal">
+        Grafico de controle do tempo
+    </a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tarefa ID</th>
+                <th>Tarefa</th>
+                <th>Usuario</th>
+                <th>descrição</th>
+                <th>Criada</th>
+                <th>tempo estimado</th>
+                <th>Inicio da tarefa</th>
+                <th class="status-column">Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks_with_time %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.name }}</td>
+                <td>{{ task.user }}</td>
+                <td>{{ task.description|striptags|slice:":20" }}{% if task.description|striptags|length > 40 %}...{% endif %}</td>
+
+                <td>{{ task.stimed }}</td>
+                <td>{{ task.estimated_hours }}</td>
+                <td>{{ task.init_date }}</td>
+                <td class="status-column"> 
+                    <form method="POST" id="status-form-{{ task.id }}">
+                        {% csrf_token %}
+                        <input type="hidden" name="task_id" value="{{ task.id }}">
+                        <select name="status" class="form-control" onchange="submitStatusForm({{ task.id }})">
+                            <option value="pendente" {% if task.status == 'pendente' %}selected{% endif %}>Pendente</option>
+                            <option value="em_andamento" {% if task.status == 'em_andamento' %}selected{% endif %}>Em andamento</option>
+                            <option value="feito" {% if task.status == 'feito' %}selected{% endif %}>Feito</option>
+                            <option value="reavaliar" {% if task.status == 'reavaliar' %}selected{% endif %}>Reavaliar</option>
+                        </select>
+                    </form>
+                </td>
+                <td>
+                    <a href="{% url 'task_update' task.id %}" class="btn btn-warning"><i class="fa-solid fa-pencil"></i></a>
+                    <a href="{% url 'task_delete' task.id %}" class="btn btn-danger "><i class="fa-solid fa-trash-can"></i></a>
+                    <a href="" class="btn btn-info btn-sm"><i class="fa-solid fa-user-clock"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Gráfico de Tempo Estimado por Tarefa</h5>        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <canvas id="taskChart"></canvas>
+    </div>
+    
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('taskChart').getContext('2d');
+    var taskNames = [
+        {% for task in tasks_with_time %}
+            '{{ task.task_name }}',
+        {% endfor %}
+    ];
+    console.log(taskNames);
+    var estimatedTimes = [
+        {% for task in tasks_with_time %}
+            {{ task.total_estimated_hours }},
+        {% endfor %}
+    ];
+    console.log(estimatedTimes);
+
+    var taskChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: taskNames,
+            datasets: [{
+                label: 'Tempo Estimado (horas)',
+                data: estimatedTimes,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Tempo Estimado (horas)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tarefas'
+                    }
+                }
+            }
+        }
+    });
+</script>
+<script>
+    function submitStatusForm(taskId) {
+        // Obtém o formulário específico da tarefa pelo ID e envia
+        var form = document.getElementById('status-form-' + taskId);
+        form.submit();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<!-- Adicionando estilo do Bootstrap se necessário -->
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+    <div class="alert alert-success" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Gerenciar Grupos</h2>
+
+    <!-- Botão para abrir o modal de criação -->
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createGroupModal">
+        Criar Novo Grupo
+    </button>
+
+    <!-- Tabela de Grupos Existentes -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome do Grupo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in groups %}
+            <tr>
+                <td>{{ group.name }}</td>
+                <td>
+                    <!-- Botão para abrir o modal de edição -->
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editGroupModal{{ group.id }}">
+                        <i class="fa-solid fa-pencil"></i>
+                    </button>
+                    
+                    <!-- Formulário de exclusão -->
+                    <form method="POST" action="{% url 'group_delete' group.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i></button>
+                    </form>
+                </td>
+            </tr>
+
+            <!-- Modal de Edição para cada Grupo -->
+            <div class="modal fade" id="editGroupModal{{ group.id }}" tabindex="-1" aria-labelledby="editGroupModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editGroupModalLabel">Editar Grupo</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="{% url 'group_update' group.id %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="groupName">Nome do Grupo</label>
+                                    <input type="text" class="form-control" name="name" value="{{ group.name }}">
+                                </div>
+                                <button type="submit" class="btn btn-success mt-3">Salvar Alterações</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal de Criação de Grupo -->
+    <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createGroupModalLabel">Criar Novo Grupo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'group_create' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="groupName">Nome do Grupo</label>
+                            <input type="text" class="form-control" name="name" placeholder="Nome do Grupo">
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Criar Grupo</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<!-- Adicionando JavaScript do Bootstrap para funcionamento dos modais -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

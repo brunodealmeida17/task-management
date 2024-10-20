@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block style %}
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+    <div class="alert alert-success" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <h2>Perfis</h2>
+    <a href="{% url 'profile_create' %}" class="btn btn-primary mb-3">Novo usuário</a>
+    <a href="{% url 'position_create' %}" class="btn btn-primary mb-3">Nova posição</a>
+    <a href="{% url 'group_crud' %}" class="btn btn-primary mb-3">Novo grupo</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Usuário</th>
+                <th>Posição</th>
+                <th>Data de Nascimento</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in profiles %}
+            <tr>
+                <td>{{ profile.username }}</td>
+                <td>{{ profile.position }}</td>
+                <td>{{ profile.birth }}</td>
+                <td>{{ profile.description }}</td>
+                <td>
+                    <a href="{% url 'profile_update' profile.id %}" class="btn btn-warning btn-sm"><i class="fa-solid fa-pencil"></i></a>
+                    <a href="{% url 'profile_delete' profile.id %}" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+{% block js %}
+{% endblock %}
