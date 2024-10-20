@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from braces.views import GroupRequiredMixin
 from .models import Task, TimeEntry
-from .forms import TaskForm, TimeEntryFormSet
+from .forms import TaskForm, TimeEntryFormSet, TimeEntryFilterForm
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
@@ -220,3 +220,70 @@ class TaskDeleteView(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     template_name = 'tasks/task_confirm_delete.html'
     success_url = reverse_lazy('task_list')
     context_object_name = 'tasks'
+
+
+
+
+
+class TimeEntryListView(GroupRequiredMixin, LoginRequiredMixin, ListView):
+    """
+    View that lists all time entries in the system with filtering capabilities.
+
+    Attributes:
+        group_required: The group required to access this view. Only users in the "time_entries" group can access the list.
+        model: The Django model `TimeEntry`, representing the time entry entities that will be listed.
+        template_name: The HTML template used to render the time entry list.
+        context_object_name: The context variable name for the list of time entries in the template.
+
+    Methods:
+        get_queryset: 
+            - Overrides the default queryset to apply filters based on user input from the TimeEntryFilterForm.
+            - Filters entries based on various criteria like date, estimated time, description, status, user, and task.
+
+        get_context_data: 
+            - Adds the filter form to the context for rendering in the template.
+            - Returns the modified context that includes the filter form and the filtered time entries.
+
+    Expected Output:
+        - Renders a list of time entries with filtering options for date range, estimated time, description, status, user, and task.
+    """
+    group_required = u"timeEntry"
+    model = TimeEntry
+    template_name = "tasks/time_entry_list.html"
+    context_object_name = 'entries'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        form = TimeEntryFilterForm(self.request.GET)
+
+        if form.is_valid():
+            date_from = form.cleaned_data.get('date_from')
+            date_to = form.cleaned_data.get('date_to')
+            
+            if date_from:
+                queryset = queryset.filter(date__gte=date_from)
+            if date_to:
+                queryset = queryset.filter(date__lte=date_to)
+            estimated_time = form.cleaned_data.get('estimated_time')
+            if estimated_time:
+                queryset = queryset.filter(estimated_time=estimated_time)
+            description = form.cleaned_data.get('description')
+            if description:
+                queryset = queryset.filter(description__icontains=description)
+            status = form.cleaned_data.get('status')
+            if status:
+                queryset = queryset.filter(status=status)
+            user = form.cleaned_data.get('user')
+            if user:
+                queryset = queryset.filter(task__user=user) 
+            task = form.cleaned_data.get('task')
+            if task:
+                queryset = queryset.filter(task=task)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = TimeEntryFilterForm(self.request.GET or None)
+        return context
+
