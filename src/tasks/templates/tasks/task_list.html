@@ -81,7 +81,7 @@
     var ctx = document.getElementById('taskChart').getContext('2d');
     var taskNames = [
         {% for task in tasks_with_time %}
-            '{{ task.task_name }}',
+            '{{ task.name }}',
         {% endfor %}
     ];
     console.log(taskNames);

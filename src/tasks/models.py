@@ -16,6 +16,7 @@ class Task(models.Model):
     
 class TimeEntry(models.Model):
     STATUS_CHOICES = [
+        ('', '---------'), 
         ('pendente', 'Pendente'),
         ('em_andamento', 'Em Andamento'),
         ('feito', 'Feito'),
@@ -70,7 +71,4 @@ class TimeEntry(models.Model):
             total_hours += int(minutes) / 60  # Converts minutes to hours (1 hour = 60 minutes)
 
         return round(total_hours, 2)
-
-    
-
 

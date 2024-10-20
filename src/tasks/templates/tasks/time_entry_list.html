@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block style %}
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Entradas de Tempo</h2>
+    <form method="GET" class="mb-3">
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Tempo Estimado</th>
+                <th>Descrição</th>
+                <th>Status</th>
+                <th>usuario</th>
+                <th>Tarefa</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+            <tr>
+                <td>{{ entry.id }}</td>
+                <td>{{ entry.date|date:"d-m-Y" }}</td>
+                <td>{{ entry.estimated_time }}</td>
+                <td>{{ entry.description|striptags|slice:":20" }}{% if entry.description|striptags|length > 20 %}...{% endif %}</td>
+                <td>{{ entry.status }}</td>
+                <td>{{ entry.task.user }}</td>
+                <td>{{ entry.task.name }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">Nenhuma entrada de tempo encontrada.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -91,7 +91,7 @@ APP_URLS = {
         ("Listar usuarios", "/users"),
     ],
     "timeEntry": [
-        ("Controle de tempo", "/timeentry"),
+        ("Controle de tempo", "/tasks/time-entries/"),
     ],
      
 }

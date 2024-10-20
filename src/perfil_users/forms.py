@@ -51,14 +51,16 @@ class CustomUserForm(forms.ModelForm):
             errors.append("A senha deve conter pelo menos um caractere especial.")
 
         if errors:
-            raise forms.ValidationError(errors)
-
+            raise forms.ValidationError(errors)   
+    
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.password = make_password(self.cleaned_data['password'])
+        user.password = make_password(self.cleaned_data['password'])        
         if commit:
             user.save()
+            user.groups.set(self.cleaned_data.get('groups', []))            
         return user
+
 
 class CustomUserUpdateForm(forms.ModelForm):
     password = forms.CharField(
@@ -114,11 +116,10 @@ class CustomUserUpdateForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        password = self.cleaned_data.get('password')
-        if password:  
-            user.password = make_password(password)
+        user.password = make_password(self.cleaned_data['password'])        
         if commit:
             user.save()
+            user.groups.set(self.cleaned_data.get('groups', []))            
         return user
 
 
@@ -142,6 +143,6 @@ class PositionForm(forms.ModelForm):
 
 class GroupForm(forms.ModelForm):
     class Meta:
-        model = Group
+        
         fields = ['name']
 
