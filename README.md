@@ -35,8 +35,7 @@ task-management/
 ├── env/
 │   ├── .env
 ├── nginx/
-│   ├── nginx.conf
-│   └── Dockerfile
+│   ├── default.conf
 ├── src/
 │   ├── home/
 │   │   ├── __init__.py
@@ -102,7 +101,6 @@ task-management/
 ├── .gitignore
 ├── docker-compose.yml
 ├── Dockerfile
-├── entrypoint.sh
 ├── README.md
 └── requirements.txt
 ```
